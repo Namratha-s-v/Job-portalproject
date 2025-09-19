@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+    <title>Job Portal</title>
+</head>
+<body>
+    <h1>Job Portal</h1>
+    <form id="userForm">
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <button type="submit">Add User</button>
+    </form>
+    <h2>Registered Users</h2>
+    <ul id="userList"></ul>
+    <script>
+        const apiUrl = "http://localhost:8080/api/users";
+        async function loadUsers() {
+            const res = await fetch(apiUrl);
+            const users = await res.json();
+            document.getElementById("userList");
+            list.innerHTML = "";
+            users.forEach(u => {
+                const li = document.createElement("li");
+                li.textContent = '${u.name} (${u.email})';
+                list.appendChild(li);
+            });
+        }
+        document.getElementById("userForm").addEventListener("submit", async(e) => {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            await fetch(apiUrl, {
+                method: "POST",
+                headers: {"Content-Type":"application/jsan"},
+                body: JSON.stringfy({name, email})
+            });
+            loadUsers();
+            e.target.rest();
+        });
+        loadUsers();
+    </script>
+</body>
+</html>
